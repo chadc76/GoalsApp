@@ -28,19 +28,19 @@ RSpec.describe User, type: :model do
     expect(user.session_token).not_to be_nil
   end
 
-  describe 'User::find_by_crendtials' do
+  describe 'User::find_by_credentials' do
     before { user.save! }
 
     context 'valid credentials' do 
       it 'returns the appropraite user' do 
-        expect(User.find_by_crendtials('test@test.com', 'password')).to eq(user)
+        expect(User.find_by_credentials('test@test.com', 'password')).to eq(user)
       end
     end
 
     context 'invalid credentials' do
       it 'returns nil' do
-        expect(User.find_by_crendtials('wrong@wrong.com', 'password')).to be_nil
-        expect(User.find_by_crendtials('test@test.com', 'wrong')).to be_nil
+        expect(User.find_by_credentials('wrong@wrong.com', 'password')).to be_nil
+        expect(User.find_by_credentials('test@test.com', 'wrong')).to be_nil
       end
     end
   end
@@ -50,7 +50,7 @@ RSpec.describe User, type: :model do
       user.save!
       old_session_token = user.session_token
       user.reset_session_token!
-      expect(user.session_token).to eq(old_session_token)
+      expect(user.session_token).not_to eq(old_session_token)
     end
 
     it 'returns the session token' do
