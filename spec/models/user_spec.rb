@@ -12,5 +12,63 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject(:user) {User.new(email: 'test@test.com', password: 'password')}
+
+  it {should validate_presence_of(:email)}
+  it {should validate_presence_of(:password_digest).with_message('Password can\'t be blank')}
+  it {should validate_uniqueness_of(:email)}
+  it {should validate_length_of(:password).is_at_least(6)}
+
+  it 'creates a password digest when a password is given' do
+    expect(user.password_digest).not_to be_nil
+  end
+
+  it 'creates a session token before validation' do
+    user.valid?
+    expect(user.session_token).not_to be_nil
+  end
+
+  describe 'User::find_by_crendtials' do
+    before { user.save! }
+
+    context 'valid credentials' do 
+      it 'returns the appropraite user' do 
+        expect(User.find_by_crendtials('test@test.com', 'password')).to eq(user)
+      end
+    end
+
+    context 'invalid credentials' do
+      it 'returns nil' do
+        expect(User.find_by_crendtials('wrong@wrong.com', 'password')).to be_nil
+        expect(User.find_by_crendtials('test@test.com', 'wrong')).to be_nil
+      end
+    end
+  end
+
+  describe 'User#reset_session_token!' do
+    it 'sets a new session token on the user' do
+      user.save!
+      old_session_token = user.session_token
+      user.reset_session_token!
+      expect(user.session_token).to eq(old_session_token)
+    end
+
+    it 'returns the session token' do
+      user.save!
+      expect(user.reset_session_token!).to eq(user.session_token)
+    end
+  end
+
+  describe 'User#is_password?' do
+    let(:wrong_pass) {'wrong pass'}
+    let(:right_pass) {'password'}
+
+    it 'verifies password is correct' do
+      expect(user.is_password?(right_pass)).to be true
+    end
+
+    it 'verifies password is not correct' do
+      expect(user.is_password?(wrong_pass)).to be false
+    end
+  end
 end

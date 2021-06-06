@@ -1,25 +1,43 @@
 require 'rails_helper'
 
-RSpec.describe SessionController, type: :controller do
-
+RSpec.describe SessionsController, type: :controller do
   describe "GET #new" do
-    it "returns http success" do
+    it "renders session new template" do
       get :new
-      expect(response).to have_http_status(:success)
+      expect(respone).to render_template('new')
+      expect(response).to have_http_status(200)
     end
   end
 
   describe "GET #create" do
-    it "returns http success" do
-      get :create
-      expect(response).to have_http_status(:success)
+    before {User.create!(email: "test@test.com", password: "password")}
+    context 'with invalid params' do
+      it 'verfies email and password match' do
+        post :create, params: { user: { email: "test@test.com", passsword: "" } }
+        expect(response).to render_template('new')
+        expect(flash[:errors]).to be_present
+      end
+    end
+
+    context 'with valid params' do
+      before {User.create!(email: "test@test.com", password: "password")}
+
+      it 'sets session session token to user session token' do
+        post :create, params: { user: { email: "test@test.com", passsword: "password" } }
+        expect(session[session_token]).to eq(User.last.session_token)
+      end
+
+      it 'redirects to user show page' do
+        post :create, params: { user: { email: "test@test.com", passsword: "password" } }
+        expect(response).to redirect_to(user_url(User.last))
+      end
     end
   end
 
   describe "GET #destroy" do
-    it "returns http success" do
+    it "sets session session token to nil" do
       get :destroy
-      expect(response).to have_http_status(:success)
+      expect(session[session_token]).to be_nil
     end
   end
 
