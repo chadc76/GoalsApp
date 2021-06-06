@@ -12,6 +12,11 @@ module GoalsApp
     config.load_defaults 6.1
 
     # Configuration for the application, engines, and railties goes here.
+    initializer(:remove_action_mailbox_and_activestorage_routes, after: :add_routing_paths) { |app|
+    app.routes_reloader.paths.delete_if {|path| path =~ /activestorage/}
+    app.routes_reloader.paths.delete_if {|path| path =~ /actionmailbox/ }
+    }
+
     config.generators do |g|
       g.test_framework :rspec,
         :fixtures => false,
