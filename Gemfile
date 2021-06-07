@@ -32,6 +32,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rails-controller-testing'
   gem 'spring'
+  gem 'spring-commands-rspec'
 end
 
 group :development do
