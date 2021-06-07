@@ -11,6 +11,9 @@
   </head>
 
   <body>
+    <% if session[:session_token] %>
+      <%= button_to "Log out", session_url, method: :delete %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
