@@ -33,7 +33,7 @@ RSpec.describe SessionsController, type: :controller do
     end
   end
 
-  describe "GET #destroy" do
+  describe "DELETE #destroy" do
     it "sets session session token to nil" do
       get :destroy
       expect(response).to redirect_to(new_session_url)

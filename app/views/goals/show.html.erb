@@ -1,0 +1,19 @@
+<h1>Goal:</h1>
+<table>
+  <tr>
+    <td>Title:</td>
+    <td><%= @goal.title %></td>
+  </tr>
+  <tr>
+    <td>Details:</td>
+    <td><%= @goal.details %></td>
+  </tr>
+  <tr>
+    <td>Visibility:</td>
+    <td><%= @goal.private ? "private" : "public" %></td>
+  </tr>
+  <tr>
+    <td>Finished?:</td>
+    <td><%= @goal.complete ? "Complete" : "Ongoing" %></td>
+  </tr>
+</table>
