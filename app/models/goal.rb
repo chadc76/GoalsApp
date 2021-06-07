@@ -12,4 +12,8 @@
 #  updated_at :datetime         not null
 #
 class Goal < ApplicationRecord
+  validates :title, :user_id, presence: true
+  validates :title, length: { minimum: 6 }
+
+  belongs_to :user, inverse_of: :goals
 end

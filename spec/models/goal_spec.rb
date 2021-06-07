@@ -16,7 +16,15 @@ require 'rails_helper'
 RSpec.describe Goal, type: :model do
   let(:user) { User.create!(email: 'new@user', password: 'password') }
   subject(:goal) { Goal.new(title: "New Goal", details: "New Goal Details", user_id: user.id) }
-  it { should validate_presence_of(:title) }
-  it { should validate_length_of(:title).is_at_least(6) }
-  it { should validate_presence_of(:user_id) }
+  
+  describe 'validations' do
+    it { should validate_presence_of(:title) }
+    it { should validate_length_of(:title).is_at_least(6) }
+    it { should validate_presence_of(:user_id) }
+  end
+
+  describe 'associations' do
+    it {should belong_to(:user)}
+  end
+
 end
