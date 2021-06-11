@@ -104,6 +104,17 @@ def create_goal(title, details = "", privacy = false, complete = false)
   click_on "Add Goal"
 end
 
+def edit_goal(title, details = "", privacy = false, complete = false)
+  visit edit_goal_url(Goal.last)
+  fill_in "Title:", with: title
+  fill_in "Details:", with: details
+  check('Private?') if privacy
+  check('Completed?') if complete 
+  uncheck('Private?') if !privacy
+  uncheck('Completed?') if !complete 
+  click_on "Update Goal"
+end
+
 def log_in
   user = User.create!(email: "new@user", password: "password" )
   visit new_session_url
