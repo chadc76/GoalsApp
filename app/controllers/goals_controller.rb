@@ -1,6 +1,6 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
-  
+  before_action :current_users_private_goal?, only: [:show]
   def index
     @goals = current_user.goals
     render :index
@@ -47,5 +47,13 @@ class GoalsController < ApplicationController
 
   def goal_params
     params.require(:goal).permit(:title, :details, :private, :complete)
+  end
+
+  def current_users_private_goal?
+    if current_goal.private && current_goal.user_id != current_user.id
+      flash[:notices] = ["Sorry that goal is private"]
+      redirect_to user_url(current_user)
+      return
+    end
   end
 end

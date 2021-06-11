@@ -11,4 +11,15 @@ class ApplicationController < ActionController::Base
       return
     end
   end
+
+  def current_goal
+    @current_goal ||= Goal.find_by(id: params[:id])
+  end
+
+  def current_users_goal?
+    if current_goal.user_id != current_user.id
+      redirect_to user_url(current_user)
+      return
+    end
+  end
 end

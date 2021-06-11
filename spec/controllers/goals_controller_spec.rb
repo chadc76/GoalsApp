@@ -24,6 +24,16 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
     end
 
+    it 'redirects to user show page if goal is private and doesn\'t belong to user' do
+      goal.private = true
+      goal.save!
+      user2 = User.create!(email: "new2@user", password: 'password')
+      get :show, params: { id: goal.id }, session: { session_token: user2.session_token }
+      expect(response).to redirect_to(user_url(user2))
+      expect(response).to have_http_status(302)
+      expect(flash[:notices]).to be_present
+    end
+
     it 'renders goal show template' do
       goal.save!
       get :show, params: { id: goal.id }, session: { session_token: user.session_token }
