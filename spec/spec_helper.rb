@@ -94,3 +94,12 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+def create_goal(title, details = "", privacy = false, complete = false)
+  visit new_goal_url
+  fill_in "title", with: title
+  fill_in "details", with: details
+  check('Private?') if privacy
+  check('Completed?') if complete 
+  click_on "Add Goal"
+end
