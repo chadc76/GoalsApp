@@ -66,8 +66,16 @@ RSpec.describe GoalsController, type: :controller do
 
   describe "GET #edit" do
     it 'redirects to log in page if no current user' do
-      get :edit
+      goal.save!
+      get :edit, params: {id: goal.id}
       expect(response).to redirect_to(new_session_url)
+    end
+
+    it 'renders goal edit template' do
+      goal.save!
+      get :edit, params: {id: goal.id}, session: { session_token: user.session_token }
+      expect(response).to render_template('edit')
+      expect(response).to have_http_status(200)
     end
   end
 

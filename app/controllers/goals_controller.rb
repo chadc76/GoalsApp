@@ -28,6 +28,11 @@ class GoalsController < ApplicationController
     end
   end
 
+  def edit
+    @goal = Goal.find_by(id: params[:id])
+    render :edit
+  end
+
   private
 
   def goal_params
