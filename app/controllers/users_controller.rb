@@ -22,6 +22,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by(id: params[:id])
+    @goals = @user.goals
     render :show
   end
 

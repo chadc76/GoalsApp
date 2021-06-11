@@ -45,3 +45,20 @@ feature  "editing a goal" do
     expect(current_path).to eq("/goals/#{Goal.last.id}")
   end
 end
+
+feature "deleting a goal" do
+  before(:each) do
+    log_in
+    create_goal("Test Title", "Test details")
+  end
+
+  scenario "able to delete from user show page" do
+    visit user_url(User.last)
+    click_button("delete #{Goal.last.title} goal")
+  end
+
+  scenario "able to delete from users goal index page" do
+    visit goals_url
+    click_button("delete #{Goal.last.title} goal")
+  end
+end

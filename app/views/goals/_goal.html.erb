@@ -3,3 +3,4 @@
 <p><%= goal.complete ? "Complete" : "Ongoing" %></p>
 <br>
 <p><%= goal.details %></p>
+<%= button_to("delete #{goal.title} goal", goal_url(goal), method: :delete) %>
