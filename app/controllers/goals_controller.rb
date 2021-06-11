@@ -1,7 +1,8 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
   before_action :current_users_private_goal?, only: [:show]
-  before_action :current_users_goal?, only: [:edit, :update]
+  before_action :current_users_goal?, only: [:edit, :update, :destroy]
+  before_action :set_goal, only: [:show, :edit, :update, :destroy]
 
   def index
     @goals = current_user.goals
@@ -9,7 +10,6 @@ class GoalsController < ApplicationController
   end
 
   def show
-    @goal = Goal.find_by(id: params[:id])
     render :show
   end
 
@@ -31,12 +31,10 @@ class GoalsController < ApplicationController
   end
 
   def edit
-    @goal = Goal.find_by(id: params[:id])
     render :edit
   end
 
   def update
-    @goal = Goal.find_by(id: params[:id])
     if @goal.update(goal_params)
       redirect_to goal_url(@goal)
     else
@@ -45,10 +43,20 @@ class GoalsController < ApplicationController
     end
   end
 
+  def destroy
+    @goal.destroy
+    flash[:notices] = ["goal has been delete"]
+    redirect_to user_url(current_user)
+  end
+
   private
 
   def goal_params
     params.require(:goal).permit(:title, :details, :private, :complete)
+  end
+
+  def set_goal
+    @goal ||= Goal.find_by(id: params[:id])
   end
 
   def current_users_private_goal?
