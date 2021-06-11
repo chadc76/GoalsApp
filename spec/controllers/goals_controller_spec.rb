@@ -57,9 +57,10 @@ RSpec.describe GoalsController, type: :controller do
       expect(flash[:errors]).to be_present
     end
 
-    it 'redirects to user show page when give valid goal' do
+    it 'redirects to goal show page when give valid goal' do
       post :create, params: { goal: { title: "test goal"}}, session: { session_token: user.session_token }
-      expect(response).to redirect_to(user_url(user))
+      new_goal = Goal.last
+      expect(response).to redirect_to(goal_url(new_goal))
       expect(response).to have_http_status(302)
     end
   end
@@ -80,7 +81,27 @@ RSpec.describe GoalsController, type: :controller do
   end
 
   describe "GET #update" do
+    it 'redirects to log in page if no current user' do
+      goal.save!
+      post :update, params: {id: goal.id, goal: {title: "New Title!"}}
+      expect(response).to redirect_to(new_session_url)
+    end
 
+    it 'renders edit template when update is invalid' do
+      goal.save!
+      post :update, params: { id: goal.id, goal: { title: "" }}, session: { session_token: user.session_token }
+      expect(response).to render_template('edit')
+      expect(flash[:errors]).to be_present
+    end
+
+    it 'redirects to goal show page when update is valid' do
+      goal.save!
+      post :update, params: { id: goal.id, goal: { title: "New Title!"}}, session: { session_token: user.session_token }
+      expect(response).to redirect_to(goal_url(goal))
+      expect(response).to have_http_status(302)
+      updated_goal = Goal.find(goal.id)
+      expect(updated_goal.title).to eq("New Title!")
+    end
   end
 
   describe "DELETE #destroy" do
