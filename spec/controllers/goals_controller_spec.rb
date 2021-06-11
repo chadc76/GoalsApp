@@ -18,7 +18,7 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
       get :edit, params: {id: goal.id}
       expect(response).to redirect_to(new_session_url)
-      post :update, params: {id: goal.id, goal: { title: "New Title!"}}
+      patch :update, params: {id: goal.id, goal: { title: "New Title!"}}
       expect(response).to redirect_to(new_session_url)
       delete :destroy, params: {id: goal.id}
       expect(response).to redirect_to(new_session_url)
@@ -137,7 +137,7 @@ RSpec.describe GoalsController, type: :controller do
       
       it 'redirect to current users show page' do
         goal.save!
-        post :update, params: {id: goal.id, goal: { title: "New Title!"} }, session: { session_token: user2.session_token }
+        patch :update, params: {id: goal.id, goal: { title: "New Title!"} }, session: { session_token: user2.session_token }
         expect(response).to redirect_to(user_url(user2))
         expect(response).to have_http_status(302)
         expect(flash[:notices]).to be_present
@@ -150,7 +150,7 @@ RSpec.describe GoalsController, type: :controller do
         
         it 'renders edit template' do
           goal.save!
-          post :update, params: { id: goal.id, goal: { title: "" }}, session: { session_token: user.session_token }
+          patch :update, params: { id: goal.id, goal: { title: "" }}, session: { session_token: user.session_token }
           expect(response).to render_template('edit')
           expect(flash[:errors]).to be_present
         end
@@ -160,7 +160,7 @@ RSpec.describe GoalsController, type: :controller do
         
         it 'redirects to goal show page' do
           goal.save!
-          post :update, params: { id: goal.id, goal: { title: "New Title!"}}, session: { session_token: user.session_token }
+          patch :update, params: { id: goal.id, goal: { title: "New Title!"}}, session: { session_token: user.session_token }
           expect(response).to redirect_to(goal_url(goal))
           expect(response).to have_http_status(302)
           updated_goal = Goal.find(goal.id)
