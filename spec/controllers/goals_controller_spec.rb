@@ -46,6 +46,22 @@ RSpec.describe GoalsController, type: :controller do
   end
 
   describe "POST #create" do
+    it 'redirects to log in page if no current user' do
+      post :create, params: { goal: { title: "test goal", user_id: user.id }}
+      expect(response).to redirect_to(new_session_url)
+    end
+
+    it 'renders new template when given invalid goal' do
+      post :create, params: { goal: { title: "" }}, session: { session_token: user.session_token }
+      expect(response).to render_template('new')
+      expect(flash[:errors]).to be_present
+    end
+
+    it 'redirects to user show page when give valid goal' do
+      post :create, params: { goal: { title: "test goal"}}, session: { session_token: user.session_token }
+      expect(response).to redirect_to(user_url(user))
+      expect(response).to have_http_status(302)
+    end
   end
 
   describe "GET #edit" do
