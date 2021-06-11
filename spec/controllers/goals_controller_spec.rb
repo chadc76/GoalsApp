@@ -82,6 +82,15 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
     end
 
+    it 'redirect to current users page if goal is not theirs' do
+      user2 = User.create!(email: "new2@user", password: 'password')
+      goal.save!
+      get :edit, params: {id: goal.id}, session: { session_token: user2.session_token }
+      expect(response).to redirect_to(user_url(user2))
+      expect(response).to have_http_status(302)
+      expect(flash[:notices]).to be_present
+    end
+
     it 'renders goal edit template' do
       goal.save!
       get :edit, params: {id: goal.id}, session: { session_token: user.session_token }

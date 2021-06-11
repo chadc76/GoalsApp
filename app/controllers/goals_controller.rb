@@ -1,6 +1,8 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
   before_action :current_users_private_goal?, only: [:show]
+  before_action :current_users_goal?, only: [:edit]
+  
   def index
     @goals = current_user.goals
     render :index
