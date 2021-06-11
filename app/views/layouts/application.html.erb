@@ -23,6 +23,10 @@
       <br>
       <%= link_to "Log in", new_session_url %>
     <% end %>
+
+    <%= render 'shared/flashes', flash_type: :notices %>
+    <%= render 'shared/flashes', flash_type: :errors %>
+
     <%= yield %>
   </body>
 </html>

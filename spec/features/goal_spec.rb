@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'rails_helper'
 
 feature  "adding a new goal" do
-
+  before(:each) { log_in }
+  
   scenario "has new goal page" do
     visit new_goal_url
     expect(page).to have_content("New Goal")
