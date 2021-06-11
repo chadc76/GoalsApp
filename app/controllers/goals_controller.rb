@@ -10,4 +10,9 @@ class GoalsController < ApplicationController
     @goal = Goal.find_by(id: params[:id])
     render :show
   end
+
+  def new
+    @goal = Goal.new
+    render :new
+  end
 end

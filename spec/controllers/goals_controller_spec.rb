@@ -37,6 +37,12 @@ RSpec.describe GoalsController, type: :controller do
       get :new
       expect(response).to redirect_to(new_session_url)
     end
+
+    it 'renders goal new template' do
+      get :new, session: { session_token: user.session_token }
+      expect(response).to render_template('new')
+      expect(response).to have_http_status(200)
+    end
   end
 
   describe "POST #create" do
