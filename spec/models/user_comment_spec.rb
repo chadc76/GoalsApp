@@ -12,5 +12,9 @@
 require 'rails_helper'
 
 RSpec.describe UserComment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "validations" do
+    it { should validate_presence_of(:comment) }
+    it { should validate_presence_of(:user_id) }
+    it { should validate_presence_of(:author_id) }
+  end
 end

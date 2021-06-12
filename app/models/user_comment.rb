@@ -10,4 +10,5 @@
 #  updated_at :datetime         not null
 #
 class UserComment < ApplicationRecord
+  validates :comment, :user_id, :author_id, presence: true
 end
