@@ -12,4 +12,9 @@
 require 'rails_helper'
 
 RSpec.describe GoalComment, type: :model do
+  context "validations" do
+    it { should validate_presence_of(:comment) }
+    it { should validate_presence_of(:goal_id) }
+    it { should validate_presence_of(:author_id) }
+  end
 end

@@ -10,4 +10,5 @@
 #  updated_at :datetime         not null
 #
 class GoalComment < ApplicationRecord
+  validates :comment, :goal_id, :author_id, presence: true
 end
