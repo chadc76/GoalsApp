@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user ||= User.find_by(id: params[:id])
+    @user ||= User.includes(:comments).find_by(id: params[:id])
   end
   
   def user_params

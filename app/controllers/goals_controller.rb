@@ -73,7 +73,7 @@ class GoalsController < ApplicationController
   end
 
   def set_goal
-    @goal ||= Goal.find_by(id: params[:id])
+    @goal ||= Goal.includes(:comments).find_by(id: params[:id])
   end
 
   def current_users_private_goal?
