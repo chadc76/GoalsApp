@@ -13,13 +13,12 @@ class SessionsController < ApplicationController
       flash[:errors] = ["Credentials do not match"]
       render :new
     else
-      session[:session_token] = @user.session_token
-      redirect_to user_url(@user)
+      log_in_user!(@user)
     end
   end
 
   def destroy
-    session[:session_token] = nil
+    log_out_user!
     redirect_to new_session_url
   end
 end
