@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i(show comment)
+  before_action :logged_in?, only: [:comment]
 
   def index
     @users = User.all
