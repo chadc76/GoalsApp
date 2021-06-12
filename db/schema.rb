@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 2021_06_12_215143) do
     t.integer "author_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["author_id"], name: "index_user_comments_on_author_id", unique: true
-    t.index ["user_id"], name: "index_user_comments_on_user_id", unique: true
+    t.index ["author_id"], name: "index_user_comments_on_author_id"
+    t.index ["user_id"], name: "index_user_comments_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
