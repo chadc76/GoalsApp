@@ -1,6 +1,8 @@
 <h1><%= @user.email %>'s Profile</h1>
 <h4><%= @user.email %>'s Goals:</h4>
-<%= link_to "New Goal", new_goal_url %>
+<% if current_user && request.original_url == user_url(current_user) %>
+  <%= link_to "New Goal", new_goal_url %>
+<% end %>
 <ul>
   <%= render @goals %>
 </ul>

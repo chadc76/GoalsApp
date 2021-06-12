@@ -16,8 +16,10 @@
     <td>Finished?:</td>
     <td><%= @goal.complete ? "Complete" : "Ongoing" %></td>
   </tr>
-  <tr>
-    <td>Completed?</td>
-    <td><%= completion_buttons(@goal) %></td>
-  </tr>
+  <% if @goal.user == current_user %>
+    <tr>
+      <td>Completed?</td>
+      <td><%= completion_buttons(@goal) %></td>
+    </tr>
+  <% end %>
 </table>

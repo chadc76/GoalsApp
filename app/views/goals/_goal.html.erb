@@ -3,5 +3,7 @@
 <p><%= goal.complete ? "Complete" : "Ongoing" %></p>
 <br>
 <p><%= goal.details %></p>
-<%= completion_buttons(goal) %>
-<%= button_to("delete #{goal.title} goal", goal_url(goal), method: :delete) %>
+<% if goal.user == current_user %>
+  <%= completion_buttons(goal) %>
+  <%= button_to("delete #{goal.title} goal", goal_url(goal), method: :delete) %>
+<% end %>
