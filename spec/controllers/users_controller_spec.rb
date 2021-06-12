@@ -32,6 +32,11 @@ RSpec.describe UsersController, type: :controller do
         get :create, params: { user: { email: 'test@test.com', password: 'password' } }
         expect(response).to redirect_to(user_url(User.last))
       end
+
+      it "logs user in after sign up" do
+        get :create, params: { user: { email: 'test@test.com', password: 'password' } }
+        expect(session[:session_token]).to eq(User.last.session_token)
+      end
     end
   end
 
