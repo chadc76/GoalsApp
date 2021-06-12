@@ -48,4 +48,37 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
+  describe 'POST #comment' do
+    before(:each) { User.create!(email: 'test2@test.com', password: 'password') }
+    
+    context "with invalid params" do 
+      it "doesn't create new comment" do
+        user = User.last
+        post :comment, params: { id: user.id, comment: "" }, session: { session_token: user.session_token }
+        expect(user.comments).to be_empty
+      end
+  
+      it "redirects to User show page" do
+        user = User.last
+        post :comment, params: { id: user.id, comment: "" }, session: { session_token: user.session_token }
+        expect(response).to redirect_to(user_url(user))
+        expect(flash[:errors]).to be_present
+      end
+    end
+
+    context "with valid params" do 
+      it "creates new comment" do
+        user = User.last
+        post :comment, params: { id: user.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
+        expect(user.comments).to_not be_empty
+        expect(user.comments.first.comment).to eq("Test Comment!")
+      end
+  
+      it "redirects to User show page" do
+        user = User.last
+        post :comment, params: { id: user.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
+        expect(response).to redirect_to(user_url(user))
+      end
+    end
+  end
 end

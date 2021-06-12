@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :set_user, only: %i(show comment)
 
   def index
     @users = User.all
@@ -21,12 +22,25 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find_by(id: params[:id])
     @goals = @user.goals
     render :show
   end
 
+  def comment
+    @comment = UserComment.new(user_id: params[:id], comment: params[:comment], author_id: current_user.id)
+    if @comment.save
+      redirect_to user_url(@user)
+    else
+      flash[:errors] = @comment.errors.full_messages
+      redirect_to user_url(@user)
+    end
+  end
+
   private
+
+  def set_user
+    @user ||= User.find_by(id: params[:id])
+  end
   
   def user_params
     params.require(:user).permit(:email, :password)
