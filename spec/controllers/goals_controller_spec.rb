@@ -24,6 +24,8 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
       post :toggle_complete, params: {id: goal.id}
       expect(response).to redirect_to(new_session_url)
+      post :comment, params: { id: goal.id, comment: "Test Comment!" }
+      expect(response).to redirect_to(new_session_url)
     end
   end
 
@@ -43,8 +45,7 @@ RSpec.describe GoalsController, type: :controller do
       context "when goal belongs to another user" do 
     
         it 'redirects to current user show page' do
-          goal.private = true
-          goal.save!
+          goal.toggle!(:private)
           get :show, params: { id: goal.id }, session: { session_token: user2.session_token }
           expect(response).to redirect_to(user_url(user2))
           expect(response).to have_http_status(302)
@@ -245,6 +246,66 @@ RSpec.describe GoalsController, type: :controller do
         expect(response).to redirect_to(user_url(user2))
         expect(response).to have_http_status(302)
         expect(flash[:notices]).to be_present
+      end
+    end
+  end
+
+  describe 'POST #comment' do
+
+    context "private goal" do
+
+      context "when goal belongs to another user" do 
+    
+        it 'redirects to current user show page' do
+          goal.toggle!(:private)
+          post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user2.session_token }
+          expect(response).to redirect_to(user_url(user2))
+          expect(response).to have_http_status(302)
+          expect(flash[:notices]).to be_present
+        end
+      end
+
+      context "when goal belongs to current user" do 
+  
+        it 'renders goal show page' do
+          goal.toggle!(:private)
+          post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
+          expect(goal.comments).to_not be_empty
+          expect(goal.comments.first.comment).to eq("Test Comment!")
+        end
+      end
+    end
+
+    context "non-private goal" do
+      
+      context "with invalid params" do
+        before(:each) { goal.save! }
+
+        it "doesn't create new comment" do
+          post :comment, params: { id: goal.id, comment: "" }, session: { session_token: user.session_token }
+          expect(goal.comments).to be_empty
+        end
+    
+        it "redirects to Goal show page" do
+          post :comment, params: { id: goal.id, comment: "" }, session: { session_token: user.session_token }
+          expect(response).to redirect_to(goal_url(goal))
+          expect(flash[:errors]).to be_present
+        end
+      end
+  
+      context "with valid params" do
+        before(:each) { goal.save! }
+
+        it "creates new comment" do
+          post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
+          expect(goal.comments).to_not be_empty
+          expect(goal.comments.first.comment).to eq("Test Comment!")
+        end
+    
+        it "redirects to Goal show page" do
+          post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
+          expect(response).to redirect_to(goal_url(goal))
+        end
       end
     end
   end

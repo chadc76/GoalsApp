@@ -1,8 +1,8 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
-  before_action :current_users_private_goal?, only: [:show]
+  before_action :current_users_private_goal?, only: %i(show comment)
   before_action :current_users_goal?, only: %i(edit update destroy toggle_complete)
-  before_action :set_goal, only: %i(show edit update destroy toggle_complete)
+  before_action :set_goal, only: %i(show edit update destroy toggle_complete comment)
 
   def index
     @goals = current_user.goals
@@ -53,6 +53,16 @@ class GoalsController < ApplicationController
     @goal.toggle(:complete)
     @goal.save
     redirect_back(fallback_location: root_path)
+  end
+
+  def comment
+    @comment = GoalComment.new(goal_id: params[:id], comment: params[:comment], author_id: current_user.id)
+    if @comment.save
+      redirect_to goal_url(@goal)
+    else
+      flash[:errors] = @comment.errors.full_messages
+      redirect_to goal_url(@goal)
+    end
   end
 
   private
