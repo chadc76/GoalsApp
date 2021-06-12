@@ -16,4 +16,10 @@ class Goal < ApplicationRecord
   validates :title, length: { minimum: 6 }
 
   belongs_to :user, inverse_of: :goals
+
+  has_many :comments,
+    dependent: :destroy,
+    primary_key: :id,
+    foreign_key: :goal_id,
+    class_name: :GoalComment
 end
