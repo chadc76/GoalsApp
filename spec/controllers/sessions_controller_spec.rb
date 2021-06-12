@@ -10,7 +10,7 @@ RSpec.describe SessionsController, type: :controller do
   end
 
   describe "POST #create" do
-    before {User.create!(email: "test@test.com", password: "password")}
+    before { User.create!(email: "test@test.com", password: "password") }
 
     context 'with invalid params' do
       it 'verfies email and password match' do
@@ -35,7 +35,8 @@ RSpec.describe SessionsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "sets session session token to nil" do
-      get :destroy
+      User.create!(email: "test@test.com", password: "password")
+      get :destroy, session: { session_token: User.last.session_token }
       expect(response).to redirect_to(new_session_url)
       expect(session[:session_token]).to be_nil
     end
