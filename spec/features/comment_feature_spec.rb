@@ -15,5 +15,11 @@ feature "Comment features", type: :feature do
     expect(page).to have_content("This is a test comment, yo!")
   end
 
-  scenario  "commenting on a goal"
+  scenario  "commenting on a goal" do
+    visit goal_url(goal)
+    fill_in("Comment", with: "This is a test comment, yo!")
+    click_button('Save Comment')
+    expect(current_url).to eq(goal_url(goal))
+    expect(page).to have_content("This is a test comment, yo!")
+  end
 end

@@ -23,3 +23,8 @@
     </tr>
   <% end %>
 </table>
+
+<br>
+
+<h4>Comments</h4>
+<%= render 'shared/comments', user: nil, goal: @goal, comments: @goal.comments %>
