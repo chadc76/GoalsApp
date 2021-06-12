@@ -18,7 +18,13 @@ class User < ApplicationRecord
 
   after_initialize :ensure_session_token
 
-  has_many :goals, inverse_of: :user
+  has_many :goals, dependent: :destroy, inverse_of: :user
+
+  has_many :comments,
+    dependent: :destroy,
+    primary_key: :id,
+    foreign_key: :user_id,
+    class_name: :UserComment
 
   def self.find_by_credentials(email, password)
     user = User.find_by(email: email)
