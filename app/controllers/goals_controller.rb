@@ -1,8 +1,8 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
   before_action :current_users_private_goal?, only: [:show]
-  before_action :current_users_goal?, only: [:edit, :update, :destroy, :toggle_complete]
-  before_action :set_goal, only: [:show, :edit, :update, :destroy, :toggle_complete]
+  before_action :current_users_goal?, only: %i(edit update destroy toggle_complete)
+  before_action :set_goal, only: %i(show edit update destroy toggle_complete)
 
   def index
     @goals = current_user.goals
