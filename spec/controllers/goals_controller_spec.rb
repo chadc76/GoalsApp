@@ -22,6 +22,8 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
       delete :destroy, params: {id: goal.id}
       expect(response).to redirect_to(new_session_url)
+      post :toggle_complete, params: {id: goal.id}
+      expect(response).to redirect_to(new_session_url)
     end
   end
 
@@ -53,8 +55,7 @@ RSpec.describe GoalsController, type: :controller do
       context "when goal belongs to current user" do 
     
         it 'renders goal show page' do
-          goal.private = true
-          goal.save!
+          goal.toggle!(:private)
           get :show, params: { id: goal.id }, session: { session_token: user.session_token }
           expect(response).to render_template("show")
           expect(response).to have_http_status(200)
@@ -207,5 +208,25 @@ RSpec.describe GoalsController, type: :controller do
         expect(flash[:notices]).to be_present
       end
     end
+  end
+
+  describe "POST #toggle_complete" do
+    
+    it 'switches a uncompleted goal to completed' do
+      goal.save!
+      post :toggle_complete, params: {id: goal.id }, session: { session_token: user2.session_token }
+      expect(response).to redirect_to("/")
+      expect(response).to have_http_status(302)
+      expect(Goal.last.complete).to be true
+    end
+
+    it 'switches a completed goal to uncompleted' do
+      goal.toggle!(:complete)
+      post :toggle_complete, params: {id: goal.id }, session: { session_token: user2.session_token }
+      expect(response).to redirect_to("/")
+      expect(response).to have_http_status(302)
+      expect(Goal.last.complete).to be false
+    end
+    
   end
 end

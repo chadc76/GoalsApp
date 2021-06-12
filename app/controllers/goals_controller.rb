@@ -2,7 +2,7 @@ class GoalsController < ApplicationController
   before_action :logged_in?
   before_action :current_users_private_goal?, only: [:show]
   before_action :current_users_goal?, only: [:edit, :update, :destroy]
-  before_action :set_goal, only: [:show, :edit, :update, :destroy]
+  before_action :set_goal, only: [:show, :edit, :update, :destroy, :toggle_complete]
 
   def index
     @goals = current_user.goals
@@ -47,6 +47,12 @@ class GoalsController < ApplicationController
     @goal.destroy
     flash[:notices] = ["goal has been delete"]
     redirect_to user_url(current_user)
+  end
+
+  def toggle_complete
+    @goal.toggle(:complete)
+    @goal.save
+    redirect_back(fallback_location: root_path)
   end
 
   private
