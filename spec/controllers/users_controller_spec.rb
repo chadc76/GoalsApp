@@ -72,6 +72,7 @@ RSpec.describe UsersController, type: :controller do
         post :comment, params: { id: user.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
         expect(user.comments).to_not be_empty
         expect(user.comments.first.comment).to eq("Test Comment!")
+        expect(flash[:notices]).to be_present
       end
   
       it "redirects to User show page" do

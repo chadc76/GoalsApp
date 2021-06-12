@@ -272,6 +272,7 @@ RSpec.describe GoalsController, type: :controller do
           post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
           expect(goal.comments).to_not be_empty
           expect(goal.comments.first.comment).to eq("Test Comment!")
+          expect(flash[:notices]).to be_present
         end
       end
     end
@@ -300,6 +301,7 @@ RSpec.describe GoalsController, type: :controller do
           post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
           expect(goal.comments).to_not be_empty
           expect(goal.comments.first.comment).to eq("Test Comment!")
+          expect(flash[:notices]).to be_present
         end
     
         it "redirects to Goal show page" do

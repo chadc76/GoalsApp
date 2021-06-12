@@ -58,6 +58,7 @@ class GoalsController < ApplicationController
   def comment
     @comment = GoalComment.new(goal_id: params[:id], comment: params[:comment], author_id: current_user.id)
     if @comment.save
+      flash[:notices] = ["Comment saved!"]
       redirect_to goal_url(@goal)
     else
       flash[:errors] = @comment.errors.full_messages
