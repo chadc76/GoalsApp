@@ -1,0 +1,25 @@
+<% action_url = user ? comment_user_url(user) : comment_goal_url(goal) %>
+
+<ul>
+  <% comments.each do |comment| %>
+    <li><%= comment.comment %></li>
+  <% end %>
+</ul>
+
+<br>
+
+<h2>New Comment</h2>
+
+<form action="<%= action_url %>" method="post">
+  <%= auth_token %>
+
+  <label>
+    Comment
+    <textarea 
+      name="comment" 
+      cols="20" 
+      rows="2"></textarea>
+  </label>
+
+  <button type="submit">Save Comment</button>
+</form>
