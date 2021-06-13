@@ -81,5 +81,7 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_many(:goals) }
     it { should have_many(:comments) }
+    it { should have_many(:cheers_given) }
+    it { should have_many(:cheers_recieved).through(:goals) }
   end
 end

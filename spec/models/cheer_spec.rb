@@ -31,4 +31,9 @@ RSpec.describe Cheer, type: :model do
       expect(self_cheer.errors[:user_id]).to eq(["cannot cheers themselves!!"])
     end
   end
+
+  context "associations" do
+    it { should belong_to(:user) }
+    it { should belong_to(:goal) }
+  end
 end

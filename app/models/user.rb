@@ -21,7 +21,17 @@ class User < ApplicationRecord
   after_initialize :ensure_session_token
 
   has_many :goals, dependent: :destroy, inverse_of: :user
-
+  has_many :cheers_given, 
+    dependent: :destroy,
+    foreign_key: :user_id,
+    primary_key: :id,
+    class_name: :Cheer,
+    inverse_of: :user
+  
+  has_many :cheers_recieved,
+    through: :goals,
+    source: :cheers
+  
   def self.find_by_credentials(email, password)
     user = User.find_by(email: email)
     return nil unless user

@@ -13,6 +13,9 @@ class Cheer < ApplicationRecord
   validates :user_id, uniqueness: { scope: :goal_id, message: "you have already cheered for this goal" }
   validate :does_not_cheer_self
 
+  belongs_to :user, inverse_of: :cheers_given
+  belongs_to :goal, inverse_of: :cheers
+
   private
 
   def does_not_cheer_self
