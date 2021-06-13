@@ -10,6 +10,8 @@
 #  updated_at      :datetime         not null
 #
 class User < ApplicationRecord
+  include Commentable
+
   attr_reader :password
 
   validates :email, :session_token, presence: true, uniqueness: true
@@ -19,13 +21,6 @@ class User < ApplicationRecord
   after_initialize :ensure_session_token
 
   has_many :goals, dependent: :destroy, inverse_of: :user
-
-  has_many :comments,
-    as: :commentable, 
-    dependent: :destroy,
-    primary_key: :id,
-    foreign_key: :commentable_id,
-    class_name: :Comment
 
   def self.find_by_credentials(email, password)
     user = User.find_by(email: email)
