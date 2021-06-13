@@ -26,6 +26,8 @@ RSpec.describe GoalsController, type: :controller do
       expect(response).to redirect_to(new_session_url)
       post :comment, params: { id: goal.id, comment: "Test Comment!" }
       expect(response).to redirect_to(new_session_url)
+      post :cheers, params: { id: goal.id }
+      expect(response).to redirect_to(new_session_url)
     end
   end
 
@@ -307,6 +309,53 @@ RSpec.describe GoalsController, type: :controller do
         it "redirects to Goal show page" do
           post :comment, params: { id: goal.id, comment: "Test Comment!" }, session: { session_token: user.session_token }
           expect(response).to redirect_to(goal_url(goal))
+        end
+      end
+    end
+  end
+
+  describe 'POST #cheers' do
+
+    context "private goal" do
+    
+      it 'redirects to current user show page' do
+        goal.toggle!(:private)
+        post :cheers, params: { id: goal.id }, session: { session_token: user2.session_token }
+        expect(response).to redirect_to(user_url(user2))
+        expect(response).to have_http_status(302)
+        expect(flash[:notices]).to be_present
+      end
+    end
+
+    context "non-private goal" do
+      
+      context "belongs to current user" do
+        before(:each) { goal.save! }
+
+        it "doesn't create new cheer" do
+          post :cheers, params: { id: goal.id }, session: { session_token: user.session_token }
+          expect(goal.cheer_score).to eq(0)
+        end
+    
+        it "redirects to User show page" do
+          post :cheers, params: { id: goal.id }, session: { session_token: user.session_token }
+          expect(response).to redirect_to(user_url(user))
+          expect(flash[:errors]).to be_present
+        end
+      end
+  
+      context "belongs to another user" do
+        before(:each) { goal.save! }
+
+        it "creates new cheer" do
+          post :cheers, params: { id: goal.id }, session: { session_token: user2.session_token }
+          expect(goal.cheer_score).to eq(1)
+          expect(flash[:notices]).to be_present
+        end
+    
+        it "redirects to User show page" do
+          post :cheers, params: { id: goal.id }, session: { session_token: user2.session_token }
+          expect(response).to redirect_to(user_url(goal.user_id))
         end
       end
     end

@@ -1,8 +1,9 @@
 class GoalsController < ApplicationController
   before_action :logged_in?
-  before_action :current_users_private_goal?, only: %i(show comment)
-  before_action :current_users_goal?, only: %i(edit update destroy toggle_complete)
-  before_action :set_goal, only: %i(show edit update destroy toggle_complete comment)
+  before_action :current_users_private_goal?, only: %i(show comment cheers)
+  before_action :not_current_users_goal?, only: %i(edit update destroy toggle_complete)
+  before_action :is_current_users_goal?, only: %i(cheers)
+  before_action :set_goal, only: %i(show edit update destroy toggle_complete comment cheers)
 
   def index
     @goals = current_user.goals
@@ -70,6 +71,21 @@ class GoalsController < ApplicationController
       redirect_to goal_url(@goal)
     end
   end
+  
+
+  def cheers
+    @cheer = Cheer.new(
+      goal_id: params[:id], 
+      user_id: current_user.id
+      )
+    if @cheer.save
+      flash[:notices] = ["Cheer saved!"]
+      redirect_to user_url(@goal.user_id)
+    else
+      flash[:errors] = @cheer.errors.full_messages
+      redirect_to user_url(@goal.user_id)
+    end
+  end
 
   private
 
@@ -84,6 +100,14 @@ class GoalsController < ApplicationController
   def current_users_private_goal?
     if current_goal.private && current_goal.user_id != current_user.id
       flash[:notices] = ["Sorry that goal is private"]
+      redirect_to user_url(current_user)
+      return
+    end
+  end
+
+  def is_current_users_goal?
+    if current_goal.user_id == current_user.id
+      flash[:errors] = ["You can't cheers your own goal"]
       redirect_to user_url(current_user)
       return
     end
