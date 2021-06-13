@@ -57,7 +57,7 @@ group :test do
   gem 'launchy'
   gem 'shoulda-matchers'
   gem 'rspec-rails'
-  gem 'factory_bot_rails', :require => false
+  gem 'factory_bot_rails'
   gem 'faker'
   gem 'guard-rspec'
 end
