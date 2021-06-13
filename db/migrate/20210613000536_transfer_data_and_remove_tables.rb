@@ -36,9 +36,9 @@ class TransferDataAndRemoveTables < ActiveRecord::Migration[6.1]
 
     Comment.all.each do |c|
       if c.commentable_type == 'User'
-        UserComment.create!(comment: c.comment, author_id: c.author_id, user_id: c.user_id)
+        UserComment.create!(comment: c.comment, author_id: c.author_id, user_id: c.commentable_id)
       else
-        GoalComment.create!(comment: c.comment, author_id: c.author_id, gaol_id: c.goal_id)
+        GoalComment.create!(comment: c.comment, author_id: c.author_id, goal_id: c.commentable_id)
       end
     end
 
