@@ -13,5 +13,11 @@
 class Comment < ApplicationRecord
   validates :comment, :author_id, :commentable_type, :commentable_id, presence: true
   validates :commentable_type, inclusion: %w(User Goal)
+
   belongs_to :commentable, polymorphic: true
+
+  belongs_to :author,
+    primary_key: :id,
+    foreign_key: :author_id,
+    class_name: :User
 end

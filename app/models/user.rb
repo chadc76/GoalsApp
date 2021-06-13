@@ -21,10 +21,11 @@ class User < ApplicationRecord
   has_many :goals, dependent: :destroy, inverse_of: :user
 
   has_many :comments,
+    as: :commentable, 
     dependent: :destroy,
     primary_key: :id,
-    foreign_key: :user_id,
-    class_name: :UserComment
+    foreign_key: :commentable_id,
+    class_name: :Comment
 
   def self.find_by_credentials(email, password)
     user = User.find_by(email: email)

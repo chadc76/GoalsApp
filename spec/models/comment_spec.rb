@@ -20,4 +20,9 @@ RSpec.describe Comment, type: :model do
     it { should validate_presence_of(:commentable_type) }
     it { should validate_inclusion_of(:commentable_type).in_array(%w(User Goal)) }
   end
+
+  context "associations" do
+    it { should belong_to(:author) }
+    it { should belong_to(:commentable) }
+  end
 end

@@ -18,8 +18,9 @@ class Goal < ApplicationRecord
   belongs_to :user, inverse_of: :goals
 
   has_many :comments,
+    as: :commentable, 
     dependent: :destroy,
     primary_key: :id,
-    foreign_key: :goal_id,
-    class_name: :GoalComment
+    foreign_key: :commentable_id,
+    class_name: :Comment
 end
