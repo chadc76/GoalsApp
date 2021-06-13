@@ -56,7 +56,12 @@ class GoalsController < ApplicationController
   end
 
   def comment
-    @comment = GoalComment.new(goal_id: params[:id], comment: params[:comment], author_id: current_user.id)
+    @comment = Comment.new(
+      commentable_type: 'Goal', 
+      commentable_id: params[:id], 
+      comment: params[:comment], 
+      author_id: current_user.id
+      )
     if @comment.save
       flash[:notices] = ["Comment saved!"]
       redirect_to goal_url(@goal)

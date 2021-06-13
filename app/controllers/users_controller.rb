@@ -28,7 +28,12 @@ class UsersController < ApplicationController
   end
 
   def comment
-    @comment = UserComment.new(user_id: params[:id], comment: params[:comment], author_id: current_user.id)
+    @comment = Comment.new(
+      commentable_type: 'User', 
+      commentable_id: params[:id], 
+      comment: params[:comment], 
+      author_id: current_user.id
+      )
     if @comment.save
       flash[:notices] = ["Comment saved!"]
       redirect_to user_url(@user)
