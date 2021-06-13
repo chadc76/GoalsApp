@@ -122,3 +122,10 @@ def log_in
   fill_in('Password', with: 'password')
   click_button("Log in!")
 end
+
+def twelve_cheers(user, user2)
+  12.times do 
+    goal1 = FactoryBot.create(:goal, user_id: user2.id)
+    FactoryBot.create(:cheer, user_id: user.id, goal_id: goal1.id)
+  end
+end
