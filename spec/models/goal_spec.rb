@@ -28,4 +28,20 @@ RSpec.describe Goal, type: :model do
     it { should have_many(:comments) }
     it { should have_many(:cheers) }
   end
+
+  describe 'instance methods' do
+    describe 'Goal#cheer_score' do
+      before(:each) do
+        user.save!
+        goal.save!
+      end
+
+      it 'returns the number of cheers for a particular goal' do
+        expect(goal.cheer_score).to eq(0)
+        user2 = FactoryBot.create(:user)
+        FactoryBot.create(:cheer, user_id: user2.id, goal_id: goal.id)
+        expect(goal.cheer_score).to eq(1)
+      end
+    end
+  end
 end

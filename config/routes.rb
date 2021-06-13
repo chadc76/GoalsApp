@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :users, only: %i(index new create show) do
     member do
       post :comment
+      get :cheers
     end
   end
 
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
     member do
       post :toggle_complete
       post :comment
+      post :cheers
     end
   end
   

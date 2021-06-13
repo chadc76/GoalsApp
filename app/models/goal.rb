@@ -17,5 +17,9 @@ class Goal < ApplicationRecord
   validates :title, length: { minimum: 6 }
 
   belongs_to :user, inverse_of: :goals
-  has_many :cheers, dependent: :destroy, inverse_of: :goal
+  has_many :cheers, dependent: :destroy
+
+  def cheer_score
+    cheers.count
+  end
 end
