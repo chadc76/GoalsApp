@@ -37,6 +37,7 @@ RSpec.describe Cheer, type: :model do
       twelve_cheers(user, user2)
       goal2 = FactoryBot.create(:goal, user_id: user2.id)
       cheer1 = FactoryBot.build(:cheer, user_id: user.id, goal_id: goal2.id)
+      cheer1.valid?
       expect(cheer1.errors[:user_id]).to eq(["is out of cheers"])
     end
 
