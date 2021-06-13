@@ -5,13 +5,19 @@
 #  id               :bigint           not null, primary key
 #  comment          :string           not null
 #  author_id        :integer          not null
-#  commentable_type :string
-#  commentable_id   :bigint
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  commentable_type :string           not null
+#  commentable_id   :bigint           not null
 #
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "validations" do
+    it { should validate_presence_of(:comment) }
+    it { should validate_presence_of(:author_id) }
+    it { should validate_presence_of(:commentable_id) }
+    it { should validate_presence_of(:commentable_type) }
+    it { should validate_inclusion_of(:commentable_type).in_array(%w(User Goal)) }
+  end
 end
