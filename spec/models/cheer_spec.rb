@@ -11,5 +11,24 @@
 require 'rails_helper'
 
 RSpec.describe Cheer, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:user) {FactoryBot.create(:user)}
+  let(:user2) {FactoryBot.create(:user)}
+  let(:goal) {FactoryBot.create(:goal, user_id: user.id)}
+  subject(:cheer) {FactoryBot.build(:cheer, user_id: user2.id, goal_id: goal.id)}
+  let(:self_cheer) {FactoryBot.build(:cheer, user_id: user.id, goal_id: goal.id)}
+
+  context "validations" do
+    it { should validate_presence_of(:goal_id) }
+    it { should validate_presence_of(:user_id) }
+    it 'should validate a user can\'t cheer for the same goal more than once' do
+      cheer.save!
+      cheer1 = FactoryBot.build(:cheer, user_id: user2.id, goal_id: goal.id)
+      cheer1.valid?
+      expect(cheer1.errors[:user_id]).to eq(["you have already cheered for this goal"])
+    end
+    it 'should not allow you to cheers your own goal' do
+      self_cheer.valid?
+      expect(self_cheer.errors[:user_id]).to eq(["cannot cheers themselves!!"])
+    end
+  end
 end
