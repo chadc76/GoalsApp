@@ -79,7 +79,7 @@ class GoalsController < ApplicationController
       user_id: current_user.id
       )
     if @cheer.save
-      flash[:notices] = ["Cheer saved!"]
+      flash[:notices] = ["You cheered #{@goal.user.email} goal!"]
       redirect_to user_url(@goal.user_id)
     else
       flash[:errors] = @cheer.errors.full_messages

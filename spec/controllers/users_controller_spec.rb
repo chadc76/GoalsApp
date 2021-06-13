@@ -84,7 +84,7 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'GET #cheers' do
-    let(:user) { User.create!(email: 'new@user', password: 'password') }
+    let(:user) { User.create!(email: 'new4@user', password: 'password') }
     let(:goal) { Goal.create!(title: "New Goal", details: "New Goal Details", user_id: user.id) }
     let(:goal2) { Goal.create!(title: "New Goal 2", details: "New Goal Details", user_id: user.id) }
     let(:user2) { User.create!(email: "new2@user", password: 'password') }

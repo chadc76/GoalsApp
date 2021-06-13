@@ -116,9 +116,9 @@ def edit_goal(title, details = "", privacy = false, complete = false)
 end
 
 def log_in
-  user = User.create!(email: "new@user", password: "password" )
+  User.create!(email: "new3@user", password: "password" )
   visit new_session_url
-  fill_in('Email', with: 'new@user')
+  fill_in('Email', with: 'new3@user')
   fill_in('Password', with: 'password')
   click_button("Log in!")
 end

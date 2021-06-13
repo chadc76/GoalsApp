@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GoalsController, type: :controller do
-  let(:user) { User.create!(email: 'new@user', password: 'password') }
+  let(:user) { User.create!(email: 'new1@user', password: 'password') }
   let(:goal) { Goal.new(title: "New Goal", details: "New Goal Details", user_id: user.id) }
   let(:user2) { User.create!(email: "new2@user", password: 'password') }
 

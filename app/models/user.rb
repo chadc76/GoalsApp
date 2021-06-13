@@ -20,7 +20,13 @@ class User < ApplicationRecord
 
   after_initialize :ensure_session_token
 
-  has_many :goals, dependent: :destroy, inverse_of: :user
+  has_many :goals, 
+    dependent: :destroy, 
+    inverse_of: :user,
+    foreign_key: :user_id,
+    primary_key: :id,
+    class_name: :Goal,
+    inverse_of: :user
   has_many :cheers_given, 
     dependent: :destroy,
     foreign_key: :user_id,
