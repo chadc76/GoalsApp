@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i(show comment)
+  before_action :set_user, only: %i(show comment cheers)
   before_action :logged_in?, only: [:comment]
+  before_action :is_current_user?, only: [:cheers]
 
   def index
     @users = User.all
@@ -43,6 +44,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def cheers
+    @cheers = @user.cheers_recieved
+    render :cheers
+  end
+
   private
 
   def set_user
@@ -51,5 +57,13 @@ class UsersController < ApplicationController
   
   def user_params
     params.require(:user).permit(:email, :password)
+  end
+
+  def is_current_user?
+    if set_user.id != current_user.id
+      flash[:notices] = ["You can't view another users cheers!"]
+      redirect_to user_url(current_user)
+      return
+    end
   end
 end

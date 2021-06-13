@@ -82,4 +82,36 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe 'GET #cheers' do
+    let(:user) { User.create!(email: 'new@user', password: 'password') }
+    let(:goal) { Goal.create!(title: "New Goal", details: "New Goal Details", user_id: user.id) }
+    let(:goal2) { Goal.create!(title: "New Goal 2", details: "New Goal Details", user_id: user.id) }
+    let(:user2) { User.create!(email: "new2@user", password: 'password') }
+    
+    context "belongs to current user" do
+      before(:each) do
+        Cheer.create!(goal_id: goal.id, user_id: user2.id)
+        Cheer.create!(goal_id: goal2.id, user_id: user2.id)
+      end
+
+      it "renders current users cheers index page" do
+        get :cheers, params: { id: user.id }, session: { session_token: user.session_token }
+        expect(response).to render_template('cheers')
+      end
+    end
+
+    context "belongs to another user" do
+      before(:each) do
+        Cheer.create!(goal_id: goal.id, user_id: user2.id)
+        Cheer.create!(goal_id: goal2.id, user_id: user2.id)
+      end
+  
+      it "redirects to current users show page" do
+        post :cheers, params: { id: user.id }, session: { session_token: user2.session_token }
+        expect(response).to redirect_to(user_url(user2))
+        expect(flash[:notices]).to be_present
+      end
+    end
+  end
 end
