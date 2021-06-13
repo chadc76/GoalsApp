@@ -13,8 +13,9 @@
 #
 FactoryBot.define do
   factory :goal do
-    title { "MyString" }
-    details { "MyText" }
+    title { Faker::Lorem.sentence(word_count: 3) }
+    details { Faker::Lorem.paragraph(sentence_count: 7) }
+    user_id { User.last.id }
     private { false }
     complete { false }
   end

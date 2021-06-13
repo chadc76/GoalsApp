@@ -14,8 +14,8 @@
 require 'rails_helper'
 
 RSpec.describe Goal, type: :model do
-  let(:user) { User.create!(email: 'new@user', password: 'password') }
-  subject(:goal) { Goal.new(title: "New Goal", details: "New Goal Details", user_id: user.id) }
+  let(:user) {FactoryBot.build(:user)}
+  subject(:goal) { FactoryBot.build(:goal, user_id: user.id) }
   
   describe 'validations' do
     it { should validate_presence_of(:title) }
