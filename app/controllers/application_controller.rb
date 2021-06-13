@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     @current_goal ||= Goal.find_by(id: params[:id])
   end
 
-  def current_users_goal?
+  def not_current_users_goal?
     if current_goal.user_id != current_user.id
       flash[:notices] = ["This is not your Goal!"]
       redirect_to user_url(current_user)
