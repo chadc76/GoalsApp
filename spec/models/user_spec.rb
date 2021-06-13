@@ -48,33 +48,45 @@ RSpec.describe User, type: :model do
       end
     end
   end
-
-  describe 'User#reset_session_token!' do
-    it 'sets a new session token on the user' do
-      user.save!
-      old_session_token = user.session_token
-      user.reset_session_token!
-      expect(user.session_token).not_to eq(old_session_token)
-    end
-
-    it 'returns the session token' do
-      user.save!
-      expect(user.reset_session_token!).to eq(user.session_token)
-    end
-  end
-
   describe 'instance methods' do
+
+    describe 'User#reset_session_token!' do
+      it 'sets a new session token on the user' do
+        user.save!
+        old_session_token = user.session_token
+        user.reset_session_token!
+        expect(user.session_token).not_to eq(old_session_token)
+      end
+
+      it 'returns the session token' do
+        user.save!
+        expect(user.reset_session_token!).to eq(user.session_token)
+      end
+    end
+
     describe 'User#is_password?' do
-    let(:wrong_pass) {'wrong pass'}
-    let(:right_pass) {'password'}
+      let(:wrong_pass) {'wrong pass'}
+      let(:right_pass) {'password'}
+  
+      it 'verifies password is correct' do
+        expect(user.is_password?(right_pass)).to be true
+      end
 
-    it 'verifies password is correct' do
-      expect(user.is_password?(right_pass)).to be true
+      it 'verifies password is not correct' do
+        expect(user.is_password?(wrong_pass)).to be false
+      end
     end
 
-    it 'verifies password is not correct' do
-      expect(user.is_password?(wrong_pass)).to be false
-    end
+    describe 'User#cheers_left' do
+
+     it 'returns the number of cheers for a remaining to be given out by user' do
+       user.save!
+       expect(user.cheers_left).to eq(12)
+       user2 = FactoryBot.create(:user)
+       goal = FactoryBot.create(:goal, user_id: user2.id)
+       FactoryBot.create(:cheer, user_id: user.id, goal_id: goal.id)
+       expect(user.cheers_left).to eq(11)
+     end
     end
   end
 

@@ -42,6 +42,10 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64(16)
   end
 
+  def cheers_left
+    12 - cheers_given.count
+  end
+
   def password=(pw)
     @password = pw
     self.password_digest = BCrypt::Password.create(pw)
